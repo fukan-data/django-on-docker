@@ -1,5 +1,6 @@
 # pull official base image
 FROM python:3.8.2-alpine
+# FROM brunneis/python:3.8.3-ubuntu-20.04
 
 # set environment variables
 ENV PYTHONDONTWRITEBYTECODE 1
@@ -11,11 +12,35 @@ RUN mkdir -p $APP_HOME && \
     mkdir $APP_HOME/staticfiles && \
     mkdir $APP_HOME/mediafiles
 
-# create the app user
-RUN addgroup -S app && adduser -S app -G app
-
 # set work directory
 WORKDIR $APP_HOME
+
+ENV LANG ja_JP.UTF-8
+ENV LC_ALL C
+
+# UID/GID copy
+ARG UID
+ARG GID
+ARG UNAME
+
+ENV UID ${UID}
+ENV GID ${GID}
+ENV UNAME ${UNAME}
+
+# RUN groupadd -g ${GID} ${UNAME}
+# RUN useradd -u ${UID} -g ${UNAME} -m ${UNAME}
+
+# create the app user
+RUN addgroup -S ${UNAME} -g ${GID}
+RUN adduser -S ${UNAME} -G ${UNAME} --uid ${UID}
+
+
+
+
+COPY ./setVolumePermission.sh $APP_HOME
+RUN chmod +x /usr/src/app/setVolumePermission.sh
+ENTRYPOINT ["sh", "-c", "/usr/src/app/setVolumePermission.sh"]
+
 
 # install dependencies
 COPY ./Pipfile .
@@ -26,6 +51,11 @@ RUN apk update && \
     pip install pipenv && \
     pipenv install --dev --system
 
+RUN apk --no-cache add postgresql-client
+
+
+
+
 # copy entrypoint shell file
 COPY ./entrypoint.development.sh $APP_HOME
 
@@ -33,10 +63,12 @@ COPY ./entrypoint.development.sh $APP_HOME
 COPY . $APP_HOME
 
 # chown all the files to the app user
-RUN chown -R app:app $APP_HOME
+RUN chown -R ${UNAME}:${UNAME} $APP_HOME
+RUN chown -R ${UNAME}:${UNAME} $APP_HOME/staticfiles
+RUN chown -R ${UNAME}:${UNAME} $APP_HOME/mediafiles
 
 # change to the app user
-USER app
+USER ${UNAME}
 
 # run entrypoint shell file
 ENTRYPOINT ["/usr/src/app/entrypoint.development.sh"]

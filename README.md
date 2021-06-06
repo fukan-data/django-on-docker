@@ -133,3 +133,35 @@ Recently Announced.
 # License  
 
 This repository is under [MIT license](https://github.com/dsonoda/django-on-docker/blob/main/LICENSE).  
+
+
+# 追記
+
+側用人＜最新＞
+https://github.com/dsonoda/django-on-docker
+wsl
+sudo service docker start
+source venv/bin/activate
+docker-compose -f docker-compose.development.yml up -d --build
+
+DB確認
+docker-compose -f docker-compose.development.yml exec app python manage.py dbshell
+
+docker全削除
+docker-compose -f docker-compose.development.yml down --rmi all --volumes --remove-orphans
+
+
+http://localhost:1337/admin/login/
+sato
+sudo -> み?カ<user>
+docker-compose -f docker-compose.development.yml exec app /bin/sh
+
+venvの仮想環境構築
+cd /var/app/django-on-docker
+python3 -m venv venv
+source venv/bin/activate
+python -V
+
+black app/
+https://blog.hirokiky.org/entry/2019/06/03/202745
+

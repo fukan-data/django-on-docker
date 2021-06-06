@@ -2,10 +2,16 @@ version: "3.7"
 
 services:
   app:
+    user: $UID:$GID
     build:
       context: ./app
       dockerfile: Dockerfile.development
-    command: gunicorn app.wsgi:application --bind 0.0.0.0:8000
+      args:
+        UID: $UID
+        GID: $GID
+        UNAME: $UNAME
+    # command: gunicorn app.wsgi:application --bind 0.0.0.0:8000
+    command: python manage.py runserver 0.0.0.0:8000
     working_dir: /usr/src/app/
     volumes:
       - ./app:/usr/src/app
