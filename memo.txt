@@ -1,0 +1,38 @@
+=========================
+側用人＜最新＞
+https://github.com/dsonoda/django-on-docker
+wsl
+sudo service docker start
+source venv/bin/activate
+docker-compose -f docker-compose.development.yml up -d --build
+
+DB確認
+docker-compose -f docker-compose.development.yml exec app python manage.py dbshell
+
+docker全削除
+docker-compose -f docker-compose.development.yml down --rmi all --volumes --remove-orphans
+
+
+
+http://localhost:1337/admin/login/
+sato
+sudo -> み?カ<user>
+docker-compose -f docker-compose.development.yml exec app /bin/sh
+
+
+
+
+＜python3.7のvenv設定＞
+python 3.7インストール
+cd /var/app
+https://qiita.com/moritalous/items/efe75eefdacec593c15c
+Python-3.7.10/python -V
+
+venvの仮想環境構築
+cd /var/app/django-on-docker
+../Python-3.7.10/python -m venv venv
+source venv/bin/activate
+python -V
+
+black app/
+https://blog.hirokiky.org/entry/2019/06/03/202745
