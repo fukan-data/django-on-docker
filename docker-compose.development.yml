@@ -12,6 +12,7 @@ services:
         UNAME: $UNAME
     # command: gunicorn app.wsgi:application --bind 0.0.0.0:8000
     command: python manage.py runserver 0.0.0.0:8000
+#    command: python manage.py runserver 127.0.0.1:8005
     working_dir: /usr/src/app/
     volumes:
       - ./app:/usr/src/app
@@ -19,6 +20,7 @@ services:
       - media_volume:/usr/src/app/mediafiles
     expose:
       - 8000
+#      - 8005
     env_file:
       - ./.env.development
     depends_on:

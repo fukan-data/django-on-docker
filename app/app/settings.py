@@ -22,11 +22,14 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.environ.get("SECRET_KEY")
+# SECRET_KEY = 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
+
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = int(os.environ.get("DEBUG", default=0))
 
 ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS").split(" ")
+# ALLOWED_HOSTS = ['localhost']
 
 
 # Application definition
@@ -60,7 +63,8 @@ ROOT_URLCONF = "app.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+        # "DIRS": [],
+        "DIRS": [os.path.join(BASE_DIR, './templates')],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -76,6 +80,43 @@ TEMPLATES = [
 WSGI_APPLICATION = "app.wsgi.application"
 
 
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    # ログ出力フォーマットの設定
+    'formatters': {
+        'production': {
+            'format': '%(asctime)s [%(levelname)s] %(process)d %(thread)d '
+                      '%(pathname)s:%(lineno)d %(message)s'
+        },
+    },
+    # ハンドラの設定
+    'handlers': {
+        'file': {
+            'level': 'INFO',
+            'class': 'logging.FileHandler',
+            'filename': 'app.log',
+            'formatter': 'production',
+        },
+    },
+    # ロガーの設定
+    'loggers': {
+        # 自分で追加したアプリケーション全般のログを拾うロガー
+        '': {
+            'handlers': ['file'],
+            'level': 'INFO',
+            'propagate': False,
+        },
+        # Django自身が出力するログ全般を拾うロガー
+        'django': {
+            'handlers': ['file'],
+            'level': 'INFO',
+            'propagate': False,
+        },
+    },
+}
+
+
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
@@ -89,6 +130,16 @@ DATABASES = {
         "PORT": os.environ.get("DB_PORT"),
     }
 }
+# DATABASES = {
+#     "default": {
+#         "ENGINE": 'django.db.backends.postgresql',
+#         "NAME": 'app',
+#         "USER": 'app',
+#         "PASSWORD": 'soba42N-pw',
+#         "HOST": 'db',
+#         "PORT": 5432,
+#     }
+# }
 
 
 # Password validation

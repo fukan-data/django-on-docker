@@ -18,11 +18,13 @@ from django.urls import path
 from django.conf import settings
 from django.conf.urls.static import static
 from uploads.views import image_upload
+from django.conf.urls import include
 
 
 urlpatterns = [
     path("uploads/", image_upload, name="uploads"),
     path("admin/", admin.site.urls),
+    path("scheduler/", include('scheduler.urls')),
 ]
 
 if bool(settings.DEBUG):
